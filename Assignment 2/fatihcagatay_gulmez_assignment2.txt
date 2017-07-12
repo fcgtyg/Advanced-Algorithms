@@ -1,0 +1,74 @@
+PART A
+======
+input	: 
+	2D array with costs and obstacles
+output	: 
+	Tuple Minimum cost, Path, Step
+procedure:
+	A minimum priority queue object keeps Nodes implemented as tuples which's elements are Cost, Name, Parent.
+	A hash table keeps visited coordinates (Names) and their parent node's names to prevent infinite loops. Because of the Priority Queue, 
+	first time a node visited be the shortest path to that node. Initialize Priority Queue by adding (0, (0,0), None) which is starting point 
+	and pop the minimum from priority queue as variable "current".
+	While current is not the final node which is like (COST, (len(g)-1, len(g[0])-1), PARENT); do the LOOP below.
+	loop	:
+		find the horizon of the current node, discover next possible steps and their costs. 
+		While finding the horizon, parent of that new nodes would be the current and return values will be like 
+		(COST+array_value, POSITION, current[1]). Than add current [1] to visited hashmap and all new nodes to priority queue.
+		Pop a new node from priority queue and update current.
+	After the loop create a path array that is initially empty and an iteration variable (x) which is equal to visited[current[1]] that is goal
+	node's parent. Iterate all nodes and append them to the path array until find parentless node which is starting point.
+	return current's cost (current[0]), path array, len(path)-1.
+complexity: 
+	For each node, we do 4 new node analysis, in worst case we do m*n path discoveries until reach the path. So the worst case complexity will be 
+	O(m*n).
+
+*******
+
+PART B
+======
+input	: 
+	2D array with costs and obstacles
+output	: 
+	Tuple Minimum cost, Path, Step
+procedure: 
+	A minimum priority queue object keeps Nodes implemented as tuples which's elements are Cost, Name, Parent.
+	A hash table keeps visited coordinates (Names) and their parent node's names to prevent infinite loops and another one to keep parent point
+	which is initially {(0,0):None} An integer with the minimum cost found until that step which is initially INFINITE. Initialize Priority Queue 
+	by adding (0, (0,0), None) which is starting point and pop the minimum from priority queue as variable "current". 
+	While priority queue is not empty; do the loop below:
+	loop	:
+		clear parent point hashmap and add current[1]: current[2] to the parent point hashmap. This will prevent going back to the parent.
+		Then find right and left nodes of the current node and calculate their cost(current[0] + array value) and parent(current[1]). 
+		Take each of them and look for if it is the goal node, if it is check for minimum cost integer if it is lower than current one. 
+		If it is lower than current minimum cost, up date minimum cost integer and deepcopy visited hashmap to keep track minimum cost path 
+		found until that time (variable visited2) and save found goal node in a variable (rtrn). Else if the node is not the goal and 
+		it is not the parent, add it to the priority queue and visited hash map with its parent. Update current by popping from priority queue.
+	rtrn is the node which has the information of minimum cost to final node and its parent; visited2 has the path information of rtrn node.
+	Create a path array initially empty and a variable x initially equals to rtrn's parent (rtrn[2]). While x not none, appent x to the path and
+	update x as x = visited2[x]. Reverse path and add final node's name in it.
+	Return rtrn's cost (rtrn[0]), path, len(path)-1
+complexity:
+	O(m*n)
+
+*******
+
+PART C
+======
+input	:
+	2D array with costs and checkpoints
+output	:
+	Tuple Minimum cost, Path, Step
+procedure:
+	Update all costs in the array except "Check" nodes by adding 9999 to them. The aim is the create an excellent reward to checkpoints.
+	A minimum priority queue object keeps Nodes implemented as tuples which's elements are Cost, Name, Parent.
+	A hash table keeps visited coordinates (Names) and their parent node's names to prevent infinite loops.  
+	Initialize current as (0, (0,0), None). While current is not the final node, do the loop below:
+	loop	:
+		Find the current node's horizon; if one checkpoint already passed, pass the checkpoint with the penalty 9999; return points found and 
+		select each and check if point in visited. If it is not, insert that point to priority queue and visited hash map.
+	Update current by popping from priority queue.
+	Define a path array initially empty and a variable x := current[2] (goal's parent). While x is not None, do append x to path and update it 
+	x := visited[x] (x's parent). Reverse path and append goal. Return current[0]-(len(path)-2)*9999, path, len(path)-1.
+Complexity:
+	O(m*n)
+	
